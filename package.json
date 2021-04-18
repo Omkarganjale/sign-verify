@@ -1,0 +1,22 @@
+{
+  "name": "signaccord",
+  "version": "1.0.0",
+  "description": "Signing Accord templates and contracts",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^7.2.0",
+    "dotenv": "^8.2.0",
+    "jsrsasign": "^10.1.13",
+    "jsrsasign-util": "^1.0.4",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sign"
+  ],
+  "author": "Omkar Suresh Ganjale",
+  "license": "ISC"
+}
