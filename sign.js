@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const argv = require('yargs').argv;
-const date = require('date-and-time')
 
 if (!fs.existsSync('./signature.json')) {
     console.warn(`Warning:Signature.json does not exist`);
@@ -13,6 +12,7 @@ if (!fs.existsSync('./signature.json')) {
         
 };
 
+const date = require('date-and-time')
 let signJson = require('./signature');
 const filePath = argv.f;
 const fileName = path.basename(filePath);   
@@ -25,7 +25,13 @@ if (!fs.existsSync(filePath)) {
     process.exit(1);
 }
 
-// hash file
+// exit if PrivKey absent
+if(!fs.existsSync(PrivKeyPath)){
+    console.error(`Error: ${PrivKeyPath} does not exist`);
+    process.exit(1);
+}
+
+// hashing the file
 const hashAlgo = crypto.createHash('sha256');
 hashAlgo.update(fs.readFileSync(filePath));
 const fileHash = hashAlgo.digest('hex');
@@ -58,11 +64,18 @@ if(!(fileHash in signJson)){
 
 }
 
-//check hexsign
+// check name
+
+if (fileName != signJson[fileHash].name){
+  console.log(`Change in file name detected \nOld fileName: ${signJson[fileHash].name} \nNew fileName: ${fileName} \nNow the file will be tracked with the new name \n`);
+  signJson[fileHash].name = fileName;
+} 
+
+// check hexsign
 const hexsignIndex = signJson[fileHash].signatureArr.findIndex( ele => ele.sign === hexsign); 
 if(hexsignIndex !== -1){
 
-  console.log(`Given file ${filePath} is already signed with the given private key at ${PrivKeyPath}\n on ${signJson[fileHash].signatureArr[hexsignIndex].timestamp}`);
+  console.log(`Given file ${filePath} is already signed with the given private key at ${PrivKeyPath} on ${signJson[fileHash].signatureArr[hexsignIndex].timestamp}`);
   signJson[fileHash].signatureArr[hexsignIndex].timestamp = date.format(now, 'YYYY/MM/DD HH:mm:ss [GMT]Z');
   console.log(`Timestamp for the above signature is updated to ${signJson[fileHash].signatureArr[hexsignIndex].timestamp}`)
 
@@ -75,9 +88,11 @@ if(hexsignIndex !== -1){
         }
       );
 
+  signJson[fileHash].count++;
+
 }
 
 //write signature.json
-fs.writeFile(__dirname+"/signature.json",JSON.stringify(signJson),err=>{
+fs.writeFile(__dirname+"/signature.json",JSON.stringify(signJson,null,2),err=>{
   if (err) throw err
 });
