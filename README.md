@@ -7,11 +7,6 @@ Ideally signature.json should be a read-only file.
 
 # Usage
 
- >Note:
- * I am still working on this prototype so some mentioned functionalities will not available yet.
- * Following functionalities are proposed ones.
- * User input exceptions are not handeled yet.
-
 ## Signing the template or document
 
 ```sh
