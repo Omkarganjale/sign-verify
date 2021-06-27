@@ -1,7 +1,8 @@
 # Abstract
 This is a simple prototype for signing and verfying the documents using nodejs
 
-If a contract/template is signed, then the signature  can be found the signature.json along with it's file hash. An array of signatures are used so any number of signatures can be stored(planning to associate signature with file hash so even if the file is renamed it cannot be missed out)
+If a contract/template is signed, then the signature  can be found in the signature.json along with it's file hash. A file can be signed by more than one user and signatures are stored in an array
+
 
 Ideally signature.json should be a read-only file.
 
